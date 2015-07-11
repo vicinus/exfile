@@ -1,0 +1,5 @@
+<%- if @content.is_a? Hash -%>
+<%- @content.sort.each do | key, value | -%>
+<%= key %><%= @contentmerger %><%= value %>
+<%- end -%>
+<%- end -%>

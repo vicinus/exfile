@@ -1,0 +1,5 @@
+<%- if @content.is_a? Enumerable -%>
+<%- @content.each do | line | -%>
+<%= line %>
+<%- end -%>
+<%- end -%>
