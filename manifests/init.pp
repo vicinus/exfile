@@ -1,3 +1,11 @@
+# Definition: exfile
+#
+# Extended file resource with option to define the path relative
+#
+# Parameters (see file resource except):
+#  - basedir: if path or title is relative, basedir is prepended
+#  - contenttemplate: optional template to format content
+#  - contentmerger: optional configuration value used by contenttemplate
 define exfile (
   $basedir = undef,
   $path = undef,
