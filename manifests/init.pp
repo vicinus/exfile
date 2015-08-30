@@ -8,6 +8,7 @@
 #  - contentmerger: optional configuration value used by contenttemplate
 define exfile (
   $basedir = undef,
+  $create_parent_dirs = false,
   $path = undef,
   $ensure = undef,
   $backup = undef,
@@ -50,10 +51,21 @@ define exfile (
     default => "${basedir}/${path_or_name}",
   }
   validate_absolute_path($real_path)
+  if $create_parent_dirs {
+    ensure_resource('file', path_array($path_or_name, $basedir), {
+      ensure => directory,
+      owner  => $owner,
+      group  => $group,
+    })
+  }
   if $contenttemplate == undef {
     $real_content = $content
   } else {
-    $real_content = template($contenttemplate)
+    if $contenttemplate =~ /\.erb$/ {
+      $real_content = template($contenttemplate)
+    } else {
+      $real_content = template("${module_name}/${contenttemplate}.erb")
+    }
   }
   if $real_content != undef {
     validate_string($real_content)
