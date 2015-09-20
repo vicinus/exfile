@@ -37,6 +37,6 @@ The `contenttemplate` can be freely choosen to format the provided content.
 The above example will create a file with content
 
 `
-key1 = value1
-key2 = value2
+ key1 = value1
+ key2 = value2
 `
