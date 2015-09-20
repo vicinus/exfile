@@ -2,7 +2,7 @@
 
 ##Overview
 
-The exfile module defines an extended file resource which supports filenames which are relative to a base directory. Additional it's possible to simple format content via templates.
+The exfile module defines an extended file resource which supports filenames which are relative to a base directory. Also parent directories can be automatically created, but there are some limitations that you need to be aware of. Additional it's possible to simple format content via templates.
 
 ##Examples
 
@@ -23,9 +23,22 @@ This will create the file `/tmp/test.txt`. It's also possible to create with the
     }
 ```
 
+###create_parent_dirs examples
+
+When `create_parent_dirs` is activated for directories used in the path or title file resources are created, but not for directories use in the basedir parameter.
+
+```puppet
+    exfile { 'a/b/c.txt':
+      basedir => '/tmp',
+      create_parent_dirs => true,
+    }
+```
+
+The example above will create file resources for the directories `/tmp/a` and `/tmp/b` but not for `/tmp`. The parameters owner, group and mode if set at the exfile resource are also used for the directory file resources. Puppet will automatically add the x modifier to the mode parameter of directories.
+
 ###contenttemplate examples
 
-The `contenttemplate` can be freely choosen to format the provided content.
+The `contenttemplate` can be used to format the provided content.
 
 ```puppet
     exfile { '/tmp/test.txt':
@@ -36,7 +49,7 @@ The `contenttemplate` can be freely choosen to format the provided content.
 
 The above example will create a file with content
 
-`
- key1 = value1
- key2 = value2
-`
+```
+  key1 = value1
+  key2 = value2
+```
