@@ -11,5 +11,6 @@
 #
 exfile { 'a/b/c/test.txt':
   basedir => '/tmp',
+  mode => '0600',
   create_parent_dirs => true,
 }
