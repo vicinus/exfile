@@ -56,6 +56,7 @@ define exfile (
       ensure => directory,
       owner  => $owner,
       group  => $group,
+      mode   => $mode,
     })
   }
   if $contenttemplate == undef {
