@@ -36,13 +36,14 @@ When `create_parent_dirs` is activated for directories used in the path or title
 
 The example above will create file resources for the directories `/tmp/a` and `/tmp/b` but not for `/tmp`. The parameters owner, group and mode if set at the exfile resource are also used for the directory file resources. Puppet will automatically add the x modifier to the mode parameter of directories.
 
-###contenttemplate examples
+###content_type examples
 
-The `contenttemplate` can be used to format the provided content.
+The `content_type` can be used to format the provided content.
 
 ```puppet
     exfile { '/tmp/test.txt':
-      contenttemplate => 'exfile/hashofkeyvalue.erb',
+      content_type => 'erb',
+      content_template => 'exfile/hashofkeyvalue.erb',
       content => { 'key1' => 'value1', 'key2' => 'value2', },
     }
 ```

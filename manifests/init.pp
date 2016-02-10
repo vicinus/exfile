@@ -38,8 +38,9 @@ define exfile (
   $target = undef,
   $type = undef,
 
-  $contenttemplate = undef,
-  $contentmerger = ' = ',
+  $content_type = 'plain',
+  $content_template = undef,
+  $additional_parameters = {},
 ) {
   if $path == undef {
     $path_or_name = $name
@@ -59,13 +60,28 @@ define exfile (
       mode   => $mode,
     })
   }
-  if $contenttemplate == undef {
-    $real_content = $content
-  } else {
-    if $contenttemplate =~ /\.erb$/ {
-      $real_content = template($contenttemplate)
-    } else {
-      $real_content = template("${module_name}/${contenttemplate}.erb")
+  case $content_type {
+    'plain': {
+      $real_content = $content
+    }
+    'epp': {
+      $real_content = epp($content_template, $content)
+    }
+    'inline_epp': {
+      $real_content = inline_epp($content_template, $content)
+    }
+    'erb': {
+      if $content_template =~ /\.erb$/ {
+        $real_content = template($content_template)
+      } else {
+        $real_content = template("${module_name}/${template}.erb")
+      }
+    }
+    'inline_erb': {
+      $real_content = inline_template($content_template)
+    }
+    default: {
+      fail("Unknown content type: '$content_type'.")
     }
   }
   if $real_content != undef {

@@ -1,10 +1,17 @@
-<%- if @content.is_a? Hash -%>
-  <%- @content.sort.each do | sectionhead, hash | -%>
-    <%- if hash.is_a? Hash -%>
-<%= sectionhead %>
-      <%- hash.sort.each do | key, value | -%>
-<%= key %><%= @contentmerger %><%= value %>
-      <%- end -%>
-    <%- end -%>
-  <%- end -%>
-<%- end -%>
+<%-
+if @content.is_a? Hash
+  if @additional_parameters.has_key?('merger')
+    merger = @additional_parameters.has_key?('merger')
+  else
+    merger = ' = '
+  end
+  @content.sort.each do | sectionhead, hash |
+    if hash.is_a? Hash
+      -%><%= "#{sectionhead}\n" %><%-
+      hash.sort.each do | key, value |
+        -%><%= "#{key}#{merger}#{value}\n" %><%-
+      end
+    end
+  end
+end
+-%>
