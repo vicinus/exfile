@@ -65,10 +65,10 @@ define exfile (
       $real_content = $content
     }
     'epp': {
-      $real_content = epp($content_template, $content)
+      $real_content = epp($content_template, $additional_parameters)
     }
     'inline_epp': {
-      $real_content = inline_epp($content_template, $content)
+      $real_content = inline_epp($content_template, $additional_parameters)
     }
     'erb': {
       if $content_template =~ /\.erb$/ {
