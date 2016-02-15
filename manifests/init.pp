@@ -74,14 +74,14 @@ define exfile (
       if $content_template =~ /\.erb$/ {
         $real_content = template($content_template)
       } else {
-        $real_content = template("${module_name}/${template}.erb")
+        $real_content = template("${module_name}/${content_template}.erb")
       }
     }
     'inline_erb': {
       $real_content = inline_template($content_template)
     }
     default: {
-      fail("Unknown content type: '$content_type'.")
+      fail("Unknown content type: '${content_type}'.")
     }
   }
   if $real_content != undef {
