@@ -60,6 +60,11 @@ define exfile (
       mode   => $mode,
     })
   }
+  if $target and $target =~ /%/ {
+    $real_target = regsubstext($target, '%[a-zA-Z0-9_-]*', prefix($additional_parameters, '%'))
+  } else {
+    $real_target = $target
+  }
   case $content_type {
     'plain': {
       $real_content = $content
@@ -115,7 +120,7 @@ define exfile (
     show_diff               => $show_diff,
     source                  => $source,
     sourceselect            => $sourceselect,
-    target                  => $target,
+    target                  => $real_target,
     type                    => $type,
   }
 }
