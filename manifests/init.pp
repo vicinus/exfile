@@ -53,7 +53,11 @@ define exfile (
   if $path == undef {
     $path_or_name = $name
   } else {
-    $path_or_name = $path
+    if $path =~ /\&/ {
+      $path_or_name = regsubstext($path, '&{[a-zA-Z0-9_-]*}', suffix(prefix($additional_parameters, '&{'), '}'))
+    } else {
+      $path_or_name = $path
+    }
   }
   $real_path = $path_or_name ? {
     /^\//     => $path_or_name,
@@ -68,8 +72,8 @@ define exfile (
       mode   => $mode,
     })
   }
-  if $target and $target =~ /%/ {
-    $real_target = regsubstext($target, '%[a-zA-Z0-9_-]*', prefix($additional_parameters, '%'))
+  if $target and $target =~ /\&/ {
+    $real_target = regsubstext($target, '&{[a-zA-Z0-9_-]*}', suffix(prefix($additional_parameters, '&{'), '}'))
   } else {
     $real_target = $target
   }
