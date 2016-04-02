@@ -2,10 +2,18 @@
 #
 # Extended file resource with option to define the path relative
 #
-# Parameters (see file resource except):
-#  - basedir: if path or title is relative, basedir is prepended
-#  - contenttemplate: optional template to format content
-#  - contentmerger: optional configuration value used by contenttemplate
+# Parameters (see file resource, except):
+#  - basedir: if path (or title, if path is empty) is relative, basedir is
+#             prepended
+#  - create_parent_dirs: if set to true, creates directory file resources for
+#                        every directory between basedir (or '/' if basedir
+#                        is not set) and the location of the file.
+#  - content_type: Can be 'plain', 'epp', 'inline_epp', 'erb' or 'inline_erb'.
+#                  Default: 'plain'
+#  - content_template: if content_type is anything expect 'plain', then this
+#                      value is used for the template.
+#  - additional_parameters: additional parameters added on epp and inline_epp
+#                           generation.
 define exfile (
   $basedir = undef,
   $create_parent_dirs = false,
