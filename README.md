@@ -2,7 +2,7 @@
 
 ##Overview
 
-The exfile module defines an extended file resource which supports filenames which are relative to a base directory. Also parent directories can be automatically created, but there are some limitations that you need to be aware of. Additional it's possible to simple format content via templates.
+The exfile module defines an extended file resource which supports filenames which are relative to a base directory. Also parent directories can be automatically created (with some limitations). Content can be created via templates and path and target parameters can contain special variables, that are expanded during resource creation.
 
 ##Examples
 
@@ -25,16 +25,20 @@ This will create the file `/tmp/test.txt`. It's also possible to create with the
 
 ###create_parent_dirs examples
 
-When `create_parent_dirs` is activated for directories used in the path or title file resources are created, but not for directories use in the basedir parameter.
+`create_parent_dirs` ensures, that file resources with ensure directory for every directory between basedir (or '/' if basedir is not set) and the location of the exfile are created.
 
 ```puppet
-    exfile { 'a/b/c.txt':
+    exfile { 'a/b/1.txt':
+      basedir => '/tmp',
+      create_parent_dirs => true,
+    }
+    exfile { 'a/b/2.txt':
       basedir => '/tmp',
       create_parent_dirs => true,
     }
 ```
 
-The example above will create file resources for the directories `/tmp/a` and `/tmp/b` but not for `/tmp`. The parameters owner, group and mode if set at the exfile resource are also used for the directory file resources. Puppet will automatically add the x modifier to the mode parameter of directories.
+The example above will create file resources for the directories `/tmp/a` and `/tmp/b` but not for `/tmp`. The parameters owner, group and mode if set at the exfile resource are also used for the directory file resources. Puppet will automatically add the x modifier to the mode parameter of directories. `ensure_resource` is used, so that not multiple file resources for the same directory are created. Therefore the limitations of `ensure_resource` apply (all parameters must be identical). Also an error applying the created catalog will ocour, if some directory in the list of automatically created directories is actually a link to another directory.
 
 ###content_type examples
 

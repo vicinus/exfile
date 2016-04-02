@@ -1,19 +1,41 @@
-# Definition: exfile
+# == Define Resource Type: exfile
 #
-# Extended file resource with option to define the path relative
+# Extended file resource that supports filenames, that are relative to a base
+#  directory. Also parent directories can be automatically created (with some
+#  limitations). Content can be created via templates.
 #
-# Parameters (see file resource, except):
-#  - basedir: if path (or title, if path is empty) is relative, basedir is
-#             prepended
-#  - create_parent_dirs: if set to true, creates directory file resources for
-#                        every directory between basedir (or '/' if basedir
-#                        is not set) and the location of the file.
-#  - content_type: Can be 'plain', 'epp', 'inline_epp', 'erb' or 'inline_erb'.
-#                  Default: 'plain'
-#  - content_template: if content_type is anything expect 'plain', then this
-#                      value is used for the template.
-#  - additional_parameters: additional parameters added on epp and inline_epp
-#                           generation.
+# === Requirement/Dependencies:
+#
+# Currently requires the puppetlabs/stdlib module on the Puppet Forge
+#
+# === Parameters
+#
+# Supports all parameters, that the file resource also supports. The following
+#  additional parameters are used:
+#
+# [*basedir*]
+#    if path (or title, if path is empty) is relative, basedir is prepended.
+#    Default: undef.
+#
+# [*create_parent_dirs*]
+#    if set to true, creates directory file resources for every directory
+#    between basedir (or '/' if basedir is not set) and the location of the
+#    exfile resource.
+#    Default: false.
+#
+# [*content_type*]
+#    Can be 'plain', 'epp', 'inline_epp', 'erb' or 'inline_erb'.
+#    Default: 'plain'.
+#
+# [*content_template*]
+#    if content_type is anything expect 'plain', then this value is used for
+#    the template.
+#    Default: undef.
+#
+# [*additional_parameters*]
+#    additional parameters added on epp and inline_epp generation.
+#    Default: {}.
+#
 define exfile (
   $basedir = undef,
   $create_parent_dirs = false,
@@ -59,9 +81,13 @@ define exfile (
       $path_or_name = $path
     }
   }
-  $real_path = $path_or_name ? {
-    /^\//     => $path_or_name,
-    default => "${basedir}/${path_or_name}",
+  if is_absolute_path($path_or_name) {
+    if $basedir != undef {
+      fail("basedir can only be used if no absolute path is given.")
+    }
+    $real_path = $path_or_name
+  } else {
+    $real_path = "${basedir}/${path_or_name}"
   }
   validate_absolute_path($real_path)
   if $create_parent_dirs {

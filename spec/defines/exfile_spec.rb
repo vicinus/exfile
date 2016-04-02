@@ -10,7 +10,6 @@ describe 'exfile', :type => :define do
   context 'absolute file creation with path' do
     let(:title) { 'test.txt' }
     let(:params) {{
-      :basedir => '/xyz',
       :path => '/tmp/test/test.txt',
     }}
     it { is_expected.to contain_file('test.txt').with({
@@ -20,9 +19,9 @@ describe 'exfile', :type => :define do
   context 'absolute file creation with basedir set' do
     let(:title) { '/tmp/test.txt' }
     let(:params) {{ :basedir => '/xyz' }}
-    it { is_expected.to contain_file('/tmp/test.txt').with({
-      :path => '/tmp/test.txt',
-    }) }
+    it 'should raise error' do
+      expect { catalogue }.to raise_error Puppet::Error, /basedir can only be used if no absolute path is given/
+    end
   end
   context 'relative file creation' do
     let(:title) { 'test.txt' }
@@ -41,10 +40,11 @@ describe 'exfile', :type => :define do
       :path => '/tmp/test/test.txt',
     }) }
   end
-  context 'contenttemplate' do
+  context 'content_template erb' do
     let(:title) { '/tmp/test.txt' }
     let(:params) {{
-      :contenttemplate => 'exfile/hashofkeyvalue.erb',
+      :content_type => 'erb',
+      :content_template => 'exfile/hashofkeyvalue.erb',
       :content => {
         'key1' => 'value1',
       }
@@ -52,6 +52,23 @@ describe 'exfile', :type => :define do
     it { is_expected.to contain_file('/tmp/test.txt').with({
       :path => '/tmp/test.txt',
       :content => "key1 = value1\n",
+    }) }
+  end
+  context 'content_template inline_epp' do
+    let(:title) { '/tmp/test.txt' }
+    let(:params) {{
+      :content_type => 'inline_epp',
+      :content_template => "<% $content.each |$key, $value| { -%>\n<%= $key %><%= pick(getvar('merger'), ' = ') %><%= $value %>\n<% } -%>",
+      :additional_parameters => {
+        'merger' => ' => ',
+      },
+      :content => {
+        'key1' => 'value1',
+      }
+    }}
+    it { is_expected.to contain_file('/tmp/test.txt').with({
+      :path => '/tmp/test.txt',
+      :content => "key1 => value1\n",
     }) }
   end
 end
