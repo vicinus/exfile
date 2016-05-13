@@ -1,7 +1,7 @@
 <%-
 if @content.is_a? Hash
   if @additional_parameters.has_key?('merger')
-    merger = @additional_parameters.has_key?('merger')
+    merger = @additional_parameters['merger']
   else
     merger = ' = '
   end

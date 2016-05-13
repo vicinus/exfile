@@ -91,7 +91,12 @@ define exfile (
   }
   validate_absolute_path($real_path)
   if $create_parent_dirs {
-    ensure_resource('file', path_array($path_or_name, $basedir), {
+    if $basedir {
+      $path_or_name_base = regsubst($path_or_name, "^${basedir}/", '')
+    } else {
+      $path_or_name_base = $path_or_name
+    }
+    ensure_resource('file', path_array($path_or_name_base, $basedir), {
       ensure => directory,
       owner  => $owner,
       group  => $group,
