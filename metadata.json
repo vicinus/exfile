@@ -1,9 +1,9 @@
 {
   "name": "vicinus-exfile",
-  "version": "1.0.1",
+  "version": "1.0.9",
   "author": "vicinus",
-  "summary": "extended file resource",
-  "license": "Apache 2.0",
+  "summary": "Extended file resource",
+  "license": "Apache-2.0",
   "source": "https://github.com/vicinus/puppet-exfile.git",
   "project_page": "https://github.com/vicinus/puppet-exfile",
   "issues_url": "https://github.com/vicinus/puppet-exfile/issues",
@@ -12,6 +12,7 @@
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
+        "4",
         "5",
         "6",
         "7"
@@ -20,6 +21,7 @@
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
+        "4",
         "5",
         "6",
         "7"
@@ -28,6 +30,7 @@
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
+        "4",
         "5",
         "6",
         "7"
@@ -36,6 +39,7 @@
     {
       "operatingsystem": "Scientific",
       "operatingsystemrelease": [
+        "4",
         "5",
         "6",
         "7"
@@ -53,7 +57,8 @@
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
         "6",
-        "7"
+        "7",
+        "8"
       ]
     },
     {
@@ -61,14 +66,16 @@
       "operatingsystemrelease": [
         "10.04",
         "12.04",
-        "14.04"
+        "14.04",
+        "16.04"
       ]
     },
     {
       "operatingsystem": "Solaris",
       "operatingsystemrelease": [
         "10",
-        "11"
+        "11",
+        "12"
       ]
     },
     {
@@ -87,7 +94,7 @@
     }
   ],
   "dependencies": [
-    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+    {"name":"puppetlabs-stdlib","version_requirement":">= 4.12.0"}
   ]
 }
 
