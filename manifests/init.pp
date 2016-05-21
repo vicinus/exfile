@@ -76,7 +76,7 @@ define exfile (
     $path_or_name = $name
   } else {
     if $path =~ /\&/ {
-      $path_or_name = regsubstext($path, '&{[a-zA-Z0-9_-]*}', suffix(prefix($additional_parameters, '&{'), '}'))
+      $path_or_name = regsubst($path, '&{[a-zA-Z0-9_-]*}', suffix(prefix($additional_parameters, '&{'), '}'))
     } else {
       $path_or_name = $path
     }
@@ -85,11 +85,11 @@ define exfile (
     if $basedir != undef {
       fail("basedir can only be used if no absolute path is given.")
     }
-    $real_path = $path_or_name
+    $_path = $path_or_name
   } else {
-    $real_path = "${basedir}/${path_or_name}"
+    $_path = "${basedir}/${path_or_name}"
   }
-  validate_absolute_path($real_path)
+  validate_absolute_path($_path)
   if $create_parent_dirs {
     if $basedir {
       $path_or_name_base = regsubst($path_or_name, "^${basedir}/", '')
@@ -104,44 +104,44 @@ define exfile (
     })
   }
   if $target and $target =~ /\&/ {
-    $real_target = regsubstext($target, '&{[a-zA-Z0-9_-]*}', suffix(prefix($additional_parameters, '&{'), '}'))
+    $_target = regsubst($target, '&{[a-zA-Z0-9_-]*}', suffix(prefix($additional_parameters, '&{'), '}'))
   } else {
-    $real_target = $target
+    $_target = $target
   }
   case $content_type {
     'plain': {
-      $real_content = $content
+      $_content = $content
     }
     'epp': {
-      $real_content = epp($content_template, $additional_parameters)
+      $_content = epp($content_template, $additional_parameters)
     }
     'inline_epp': {
-      $real_content = inline_epp($content_template, $additional_parameters)
+      $_content = inline_epp($content_template, $additional_parameters)
     }
     'erb': {
       if $content_template =~ /\.erb$/ {
-        $real_content = template($content_template)
+        $_content = template($content_template)
       } else {
-        $real_content = template("${module_name}/${content_template}.erb")
+        $_content = template("${module_name}/${content_template}.erb")
       }
     }
     'inline_erb': {
-      $real_content = inline_template($content_template)
+      $_content = inline_template($content_template)
     }
     default: {
       fail("Unknown content type: '${content_type}'.")
     }
   }
-  if $real_content != undef {
-    validate_string($real_content)
+  if $_content != undef {
+    validate_string($_content)
   }
 
   file { $name:
     ensure                  => $ensure,
-    path                    => $real_path,
+    path                    => $_path,
     backup                  => $backup,
     checksum                => $checksum,
-    content                 => $real_content,
+    content                 => $_content,
     ctime                   => $ctime,
     force                   => $force,
     group                   => $group,
@@ -163,7 +163,7 @@ define exfile (
     show_diff               => $show_diff,
     source                  => $source,
     sourceselect            => $sourceselect,
-    target                  => $real_target,
+    target                  => $_target,
     type                    => $type,
   }
 }
