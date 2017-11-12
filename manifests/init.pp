@@ -85,7 +85,7 @@ define exfile (
       $path_or_name = $path
     }
   }
-  if is_absolute_path($path_or_name) {
+  if $path_or_name =~ Stdlib::Absolutepath {
     if $basedir != undef {
       fail("basedir can only be used if no absolute path is given.")
     }
@@ -93,7 +93,8 @@ define exfile (
   } else {
     $_path = "${basedir}/${path_or_name}"
   }
-  validate_absolute_path($_path)
+  assert_type(Stdlib::Absolutepath, $_path)
+
   if $create_parent_dirs {
     if $basedir {
       $path_or_name_base = regsubst($path_or_name, "^${basedir}/", '')
@@ -136,9 +137,7 @@ define exfile (
       fail("Unknown content type: '${content_type}'.")
     }
   }
-  if $_content != undef {
-    validate_string($_content)
-  }
+  assert_type(Optional[String], $_content)
 
   file { $name:
     ensure                  => $ensure,
