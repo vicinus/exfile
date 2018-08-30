@@ -87,7 +87,9 @@ define exfile (
   }
   if $path_or_name =~ Stdlib::Absolutepath {
     if $basedir != undef {
-      fail("basedir can only be used if no absolute path is given.")
+      if (length($path_or_name) <= length($basedir)) or ($path_or_name[0,length($basedir)+1] != "${basedir}/") {
+        fail("basedir can only be used if no absolute path is given. ${path_or_name[0,length($basedir)+1]} -- $basedir")
+      }
     }
     $_path = $path_or_name
   } else {
