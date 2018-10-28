@@ -75,6 +75,8 @@ define exfile (
   $content_type = 'plain',
   $content_template = undef,
   $additional_parameters = {},
+
+  $posix_acls = undef,
 ) {
   if $path == undef {
     $path_or_name = $name
@@ -140,6 +142,12 @@ define exfile (
     }
   }
   assert_type(Optional[String], $_content)
+
+  if $posix_acls != undef {
+    posix_acl { $_path:
+      * => $posix_acls,
+    }
+  }
 
   file { $name:
     ensure                  => $ensure,
