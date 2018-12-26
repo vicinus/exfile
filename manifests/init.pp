@@ -105,7 +105,7 @@ define exfile (
     } else {
       $path_or_name_base = $path_or_name
     }
-    ensure_resource('file', path_array($path_or_name_base, $basedir), {
+    ensure_resource('file', exfile::path_array($path_or_name_base, $basedir), {
       ensure => directory,
       owner  => $owner,
       group  => $group,
